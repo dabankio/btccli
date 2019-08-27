@@ -1,9 +1,9 @@
 package btccli
 
 import (
-	"github.com/lemon-sunxiansong/btccli/testtool"
 	"fmt"
 	"github.com/lemon-sunxiansong/btccli/btcjson"
+	"github.com/lemon-sunxiansong/btccli/testtool"
 	"testing"
 )
 

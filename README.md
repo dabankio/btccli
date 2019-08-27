@@ -1,7 +1,10 @@
 Bitcoin cli wrapper
 ----
 
-Using go to wrap bitcoin cli.Useful for integreting bitcoin to tests.
+- Start and stop `bitcoind` from golang.
+- Using go to wrap bitcoin cli.
+
+Useful for integreting bitcoin to tests.
 
 See [bitcoin-core-apis](https://bitcoin.org/en/developer-reference#bitcoin-core-apis)
 

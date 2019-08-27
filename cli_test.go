@@ -1,8 +1,8 @@
 package btccli
 
 import (
-	"github.com/lemon-sunxiansong/btccli/testtool"
 	"fmt"
+	"github.com/lemon-sunxiansong/btccli/testtool"
 	"testing"
 
 	"github.com/lemon-sunxiansong/btccli/btcjson"
@@ -57,7 +57,6 @@ func TestSimpleTx(t *testing.T) {
 		}
 		rawHex, err := CliCreaterawtransaction(cmd)
 		testtool.FailOnFlag(t, err != nil, "Failed to create raw tx", err)
-
 
 		fmt.Println("Then decode rawHex")
 		_, err = CliDecoderawtransaction(btcjson.DecodeRawTransactionCmd{
@@ -147,9 +146,9 @@ func TestMultisigTx(t *testing.T) {
 		})
 		testtool.FailOnFlag(t, err != nil, "导入多签地址失败", err)
 
-		_, err := CliDecodescript(createMultisigAddresRes.RedeemScript)
+		decodeScript, err := CliDecodescript(createMultisigAddresRes.RedeemScript)
 		testtool.FailOnFlag(t, err != nil, "Failed to decode script", err)
-		// fmt.Println("decoded redeemScript:", ToJsonIndent(decodeScript))
+		fmt.Println("decoded redeemScript:", ToJsonIndent(decodeScript))
 	}
 
 	{ // 把0的钱交易给多签地址

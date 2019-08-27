@@ -1,3 +1,3 @@
-module github.com/lemon-sunxiansong/btccli
+module github.com/lomocoin/btccli
 
 go 1.12

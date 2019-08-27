@@ -7,7 +7,7 @@ import (
 )
 
 // FailOnErr used in testing assert
-func FailOnErr(t *testing.T, e error, msg string) {
+func FailOnErr(t *testing.T, e error, msg ...string) {
 	if e != nil {
 		fmt.Printf("[Fail] on error, %s, %v\n", msg, e)
 		debug.PrintStack()
