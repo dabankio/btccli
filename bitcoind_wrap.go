@@ -6,13 +6,13 @@ import (
 	"time"
 )
 
-// BitcoindRegtest 启动bitcoind -regtest 用以测试,
-func BitcoindRegtest() (closeChan chan struct{}, err error) {
+// BitcoindRegtest 启动bitcoind -regtest 用以测试,返回杀死bitcoind的函数
+func BitcoindRegtest() (func(), error) {
 	if cmdIsPortContainsNameRunning(RPCPortRegtest, "bitcoin") {
 		return nil, fmt.Errorf("bitcoind 似乎已经运行在18443端口了,不先杀掉的话数据可能有问题")
 	}
 
-	closeChan = make(chan struct{})
+	closeChan := make(chan struct{})
 
 	//bitcoin/share/rpcauth$ python3 rpcauth.py rpcusr 233
 	//String to be appended to bitcoin.conf:
@@ -29,9 +29,9 @@ func BitcoindRegtest() (closeChan chan struct{}, err error) {
 		"-rpcport=18443",
 	)
 	fmt.Println(cmd.Args)
-	err = cmd.Start()
+	err := cmd.Start()
 	if err != nil {
-		return
+		return nil, err
 	}
 	go func() {
 		fmt.Println("Wait for message to kill bitcoind")
@@ -48,5 +48,7 @@ func BitcoindRegtest() (closeChan chan struct{}, err error) {
 	// err = cmd.Wait()
 	fmt.Println("等待1.5秒,让 bitcoind 启动")
 	time.Sleep(time.Millisecond * 1500)
-	return
+	return func() {
+		closeChan <- struct{}{}
+	}, nil
 }

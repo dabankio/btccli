@@ -9,11 +9,9 @@ import (
 )
 
 func TestCliCreatemultisig(t *testing.T) {
-	closeChan, err := BitcoindRegtest()
+	killBitcoind, err := BitcoindRegtest()
 	testtool.FailOnFlag(t, err != nil, "Failed to start btcd", err)
-	defer func() {
-		closeChan <- struct{}{}
-	}()
+	defer killBitcoind()
 
 	type addrinfo struct {
 		addr, privkey, pubkey string
@@ -63,11 +61,9 @@ func TestCliCreatemultisig(t *testing.T) {
 }
 
 func TestCliAddmultisigaddress(t *testing.T) {
-	closeChan, err := BitcoindRegtest()
+	killBitcoind, err := BitcoindRegtest()
 	testtool.FailOnFlag(t, err != nil, "Failed to start btcd", err)
-	defer func() {
-		closeChan <- struct{}{}
-	}()
+	defer killBitcoind()
 
 	type addrinfo struct {
 		addr, privkey, pubkey string

@@ -7,11 +7,9 @@ import (
 )
 
 func TestCliGetAddressInfo(t *testing.T) {
-	cc, err := BitcoindRegtest()
+	killBitcoind, err := BitcoindRegtest()
 	testtool.FailOnFlag(t, err != nil, "Failed to start btcd", err)
-	defer func() {
-		cc <- struct{}{}
-	}()
+	defer killBitcoind()
 
 	var newAddr string
 	{

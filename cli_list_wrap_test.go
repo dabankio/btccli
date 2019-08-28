@@ -8,11 +8,9 @@ import (
 )
 
 func TestCliListunspent(t *testing.T) {
-	closeChan, err := BitcoindRegtest()
+	killBitcoind, err := BitcoindRegtest()
 	testtool.FailOnFlag(t, err != nil, "Failed to start d", err)
-	defer func() {
-		closeChan <- struct{}{}
-	}()
+	defer killBitcoind()
 
 	var newaddr string
 	{

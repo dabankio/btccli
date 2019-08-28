@@ -10,11 +10,9 @@ import (
 
 /// TextTx createRawTx, signTx, sendTx
 func TestSimpleTx(t *testing.T) {
-	cc, err := BitcoindRegtest()
+	killBitcoind, err := BitcoindRegtest()
 	testtool.FailOnFlag(t, err != nil, "Failed to start btcd", err)
-	defer func() {
-		cc <- struct{}{}
-	}()
+	defer killBitcoind()
 
 	var addrs []Addr
 	var zeroAddr, firstAddr Addr
@@ -106,11 +104,9 @@ func TestSimpleTx(t *testing.T) {
 }
 
 func TestMultisigTx(t *testing.T) {
-	cc, err := BitcoindRegtest()
+	killBitcoind, err := BitcoindRegtest()
 	testtool.FailOnFlag(t, err != nil, "Failed to start btcd", err)
-	defer func() {
-		cc <- struct{}{}
-	}()
+	defer killBitcoind()
 
 	var addrs []Addr
 	var zeroAddr, firstAddr, secondAddr, thirdAddr, fourthAddr Addr

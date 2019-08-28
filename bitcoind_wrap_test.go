@@ -7,10 +7,10 @@ import (
 )
 
 func TestBitcoindRegtest(t *testing.T) {
-	closeChan, err := BitcoindRegtest()
+	killBitcoind, err := BitcoindRegtest()
 	testtool.FailOnErr(t, err, "bitcoind start err")
 	defer func() {
-		closeChan <- struct{}{}
+		killBitcoind()
 		testtool.FailOnFlag(t, cmdIsPortContainsNameRunning(RPCPortRegtest, "bitcoin"), "bitcoind should be stoped")
 		t.Log("Done")
 	}()

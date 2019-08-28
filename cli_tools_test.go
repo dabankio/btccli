@@ -7,11 +7,9 @@ import (
 )
 
 func TestCliToolGetSomeAddrs(t *testing.T) {
-	cc, err := BitcoindRegtest()
+	killBitcoind, err := BitcoindRegtest()
 	testtool.FailOnErr(t, err)
-	defer func() {
-		cc <- struct{}{}
-	}()
+	defer killBitcoind()
 
 	addrs, err := CliToolGetSomeAddrs(4)
 	testtool.FailOnErr(t, err)
