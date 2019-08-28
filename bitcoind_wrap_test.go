@@ -11,7 +11,7 @@ func TestBitcoindRegtest(t *testing.T) {
 	testtool.FailOnErr(t, err, "bitcoind start err")
 	defer func() {
 		killBitcoind()
-		testtool.FailOnFlag(t, cmdIsPortContainsNameRunning(RPCPortRegtest, "bitcoin"), "bitcoind should be stoped")
+		testtool.FailOnFlag(t, cmdIsPortContainsNameRunning(RPCPortRegtest, "bitcoin"), "bitcoind should be stopped")
 		t.Log("Done")
 	}()
 

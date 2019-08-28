@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+// CliAddmultisigaddress https://bitcoin.org/en/developer-reference#addmultisigaddress
 func CliAddmultisigaddress(cmd btcjson.AddMultisigAddressCmd) (btcjson.CreateMultiSigResult, error) {
 	args := []string{
 		CmdParamRegtest, "addmultisigaddress", strconv.Itoa(int(cmd.NRequired)), ToJson(cmd.Keys),

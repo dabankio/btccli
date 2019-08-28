@@ -10,6 +10,7 @@ import (
 	"github.com/lomocoin/btccli/btcjson"
 )
 
+// CliGetbestblockhash .
 func CliGetbestblockhash() (string, error) {
 	cmdPrint := cmdAndPrint(exec.Command(
 		CmdBitcoinCli, CmdParamRegtest, "getbestblockhash",
@@ -18,6 +19,7 @@ func CliGetbestblockhash() (string, error) {
 	return cmdPrint, nil
 }
 
+// CliGetAddressInfo .
 func CliGetAddressInfo(addr string) (*btcjson.GetAddressInfoResp, error) {
 	cmdPrint := cmdAndPrint(exec.Command(
 		CmdBitcoinCli, CmdParamRegtest, "getaddressinfo", addr,
@@ -27,6 +29,35 @@ func CliGetAddressInfo(addr string) (*btcjson.GetAddressInfoResp, error) {
 	return &resp, err
 }
 
+// CliGetbalance .
+func CliGetbalance(_dummy *string, minconf *int, includeWatchonly *bool) (float64, error) {
+	args := []string{CmdParamRegtest, "getbalance"}
+	if _dummy == nil {
+		args = append(args, "*")
+	} else {
+		args = append(args, *_dummy)
+	}
+
+	if minconf != nil {
+		args = append(args, strconv.Itoa(*minconf))
+	} else {
+		args = append(args, "0")
+	}
+
+	if includeWatchonly != nil {
+		if *includeWatchonly {
+			args = append(args, "true")
+		} else {
+			args = append(args, "false")
+		}
+	} else {
+		args = append(args, "false")
+	}
+	cmdPrint := cmdAndPrint(exec.Command(CmdBitcoinCli, args...))
+	return strconv.ParseFloat(cmdPrint, 64)
+}
+
+// CliGetWalletInfo .
 func CliGetWalletInfo() map[string]interface{} {
 	cmdPrint := cmdAndPrint(exec.Command(
 		CmdBitcoinCli, CmdParamRegtest, "getwalletinfo",
@@ -36,6 +67,7 @@ func CliGetWalletInfo() map[string]interface{} {
 	return info
 }
 
+// CliGetblockcount .
 func CliGetblockcount() (int, error) {
 	cmd := exec.Command(CmdBitcoinCli, CmdParamRegtest, "getblockcount")
 	cmdPrint := cmdAndPrint(cmd)
@@ -43,6 +75,7 @@ func CliGetblockcount() (int, error) {
 	return strconv.Atoi(cmdPrint)
 }
 
+// CliGetblockhash .
 func CliGetblockhash(height int) (string, error) {
 	cmdPrint := cmdAndPrint(exec.Command(CmdBitcoinCli, CmdParamRegtest, "getblockhash", strconv.Itoa(height)))
 	//TODO validate hash

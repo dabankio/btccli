@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// Addr .
 type Addr struct {
 	Address string
 	Privkey string
