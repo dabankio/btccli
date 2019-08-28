@@ -2,7 +2,7 @@ package btccli
 
 import (
 	"fmt"
-	"github.com/lemon-sunxiansong/btccli/btcjson"
+	"github.com/lomocoin/btccli/btcjson"
 	"os/exec"
 	"strings"
 )

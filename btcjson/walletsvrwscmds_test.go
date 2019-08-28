@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lemon-sunxiansong/btccli/btcjson"
+	"github.com/lomocoin/btccli/btcjson"
 )
 
 // TestWalletSvrWsCmds tests all of the wallet server websocket-specific

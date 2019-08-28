@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/lemon-sunxiansong/btccli/btcjson"
+	"github.com/lomocoin/btccli/btcjson"
 )
 
 // TestChainSvrCustomResults ensures any results that have custom marshalling

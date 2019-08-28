@@ -2,7 +2,7 @@ package btccli
 
 import (
 	"encoding/json"
-	"github.com/lemon-sunxiansong/btccli/btcjson"
+	"github.com/lomocoin/btccli/btcjson"
 	"os/exec"
 	"strconv"
 )

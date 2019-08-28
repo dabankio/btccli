@@ -3,7 +3,7 @@ package btccli
 import (
 	"testing"
 
-	"github.com/lemon-sunxiansong/btccli/testtool"
+	"github.com/lomocoin/btccli/testtool"
 )
 
 func TestBitcoindRegtest(t *testing.T) {

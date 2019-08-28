@@ -2,8 +2,8 @@ package btccli
 
 import (
 	"fmt"
-	"github.com/lemon-sunxiansong/btccli/btcjson"
-	"github.com/lemon-sunxiansong/btccli/testtool"
+	"github.com/lomocoin/btccli/btcjson"
+	"github.com/lomocoin/btccli/testtool"
 	"testing"
 )
 

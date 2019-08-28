@@ -2,10 +2,10 @@ package btccli
 
 import (
 	"fmt"
-	"github.com/lemon-sunxiansong/btccli/testtool"
+	"github.com/lomocoin/btccli/testtool"
 	"testing"
 
-	"github.com/lemon-sunxiansong/btccli/btcjson"
+	"github.com/lomocoin/btccli/btcjson"
 )
 
 func TestCliCreatemultisig(t *testing.T) {

@@ -1,7 +1,7 @@
 package btccli
 
 import (
-	"github.com/lemon-sunxiansong/btccli/btcjson"
+	"github.com/lomocoin/btccli/btcjson"
 )
 
 func isCoinbaseTx(tx *btcjson.GetTransactionResult) bool {
