@@ -7,7 +7,7 @@ import (
 )
 
 func TestCliGetAddressInfo(t *testing.T) {
-	killBitcoind, err := BitcoindRegtest()
+	killBitcoind, err := BitcoindRegtest("-addresstype=legacy")
 	testtool.FailOnFlag(t, err != nil, "Failed to start btcd", err)
 	defer killBitcoind()
 
