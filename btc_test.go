@@ -10,27 +10,27 @@ import (
 
 /// TextTx createRawTx, signTx, sendTx
 func TestSimpleTx(t *testing.T) {
-	killBitcoind, err := BitcoindRegtest()
+	cli, killBitcoind, err := RunBitcoind(&RunOptions{NewTmpDir: true})
 	testtool.FailOnFlag(t, err != nil, "Failed to start btcd", err)
 	defer killBitcoind()
 
 	var addrs []Addr
 	var zeroAddr, firstAddr Addr
 	{
-		addrs, err = CliToolGetSomeAddrs(5)
+		addrs, err = cli.ToolGetSomeAddrs(5)
 		testtool.FailOnFlag(t, err != nil, "Failed to get new address", err)
 		zeroAddr = addrs[0]
 		firstAddr = addrs[1]
 	}
 	{ //gen 101 to addr
-		_, err := CliGeneratetoaddress(101, zeroAddr.Address, nil)
+		_, err := cli.Generatetoaddress(101, zeroAddr.Address, nil)
 		testtool.FailOnFlag(t, err != nil, "Failed to generate to address ", err)
 	}
 	var unspents []btcjson.ListUnspentResult
 	{ // list unspent
-		unspents, err = CliListunspent(0, 999, []string{zeroAddr.Address}, nil, nil)
+		unspents, err = cli.Listunspent(0, 999, []string{zeroAddr.Address}, nil, nil)
 		testtool.FailOnFlag(t, err != nil, "Failed to list unspent", err)
-		fmt.Println("unspents", ToJsonIndent(unspents))
+		fmt.Println("unspents", ToJSONIndent(unspents))
 	}
 
 	{ // simple tx, o把btc转给1
@@ -53,17 +53,17 @@ func TestSimpleTx(t *testing.T) {
 				},
 			},
 		}
-		rawHex, err := CliCreaterawtransaction(cmd)
+		rawHex, err := cli.Createrawtransaction(cmd)
 		testtool.FailOnFlag(t, err != nil, "Failed to create raw tx", err)
 
 		fmt.Println("Then decode rawHex")
-		_, err = CliDecoderawtransaction(btcjson.DecodeRawTransactionCmd{
+		_, err = cli.Decoderawtransaction(btcjson.DecodeRawTransactionCmd{
 			HexTx: rawHex,
 		})
 		testtool.FailOnFlag(t, err != nil, "Failed to decode raw tx", err)
 
 		keys := []string{zeroAddr.Privkey}
-		signRes, err := CliSignrawtransactionwithkey(btcjson.SignRawTransactionCmd{
+		signRes, err := cli.Signrawtransactionwithkey(btcjson.SignRawTransactionCmd{
 			RawTx:    rawHex,
 			PrivKeys: &keys,
 			Prevtxs: []btcjson.PreviousDependentTxOutput{
@@ -76,16 +76,16 @@ func TestSimpleTx(t *testing.T) {
 			},
 		})
 		testtool.FailOnFlag(t, err != nil, "Failed to sign with key raw tx", err)
-		// fmt.Println("sign res", ToJsonIndent(signRes))
+		// fmt.Println("sign res", ToJSONIndent(signRes))
 
 		fmt.Println("Then decode rawHex")
-		decodedTxAfterSign, err := CliDecoderawtransaction(btcjson.DecodeRawTransactionCmd{
+		decodedTxAfterSign, err := cli.Decoderawtransaction(btcjson.DecodeRawTransactionCmd{
 			HexTx: signRes.Hex,
 		})
 		testtool.FailOnFlag(t, err != nil, "Failed to decode raw tx", err)
-		fmt.Println("decodedTxAfterSign tx", ToJsonIndent(decodedTxAfterSign))
+		fmt.Println("decodedTxAfterSign tx", ToJSONIndent(decodedTxAfterSign))
 
-		sendRes, err := CliSendrawtransaction(btcjson.SendRawTransactionCmd{
+		sendRes, err := cli.Sendrawtransaction(btcjson.SendRawTransactionCmd{
 			HexTx: signRes.Hex,
 		})
 		testtool.FailOnFlag(t, err != nil, "Failed to send raw tx", err)
@@ -95,16 +95,16 @@ func TestSimpleTx(t *testing.T) {
 			if len(vout.ScriptPubKey.Hex) == 0 {
 				continue
 			}
-			decodeScript, err := CliDecodescript(vout.ScriptPubKey.Hex)
+			decodeScript, err := cli.Decodescript(vout.ScriptPubKey.Hex)
 			testtool.FailOnFlag(t, err != nil, "Failed to decode scriptPubkey", err)
-			fmt.Println("vout:", ToJsonIndent(vout), "scriptPubkey decode:", ToJsonIndent(decodeScript))
+			fmt.Println("vout:", ToJSONIndent(vout), "scriptPubkey decode:", ToJSONIndent(decodeScript))
 		}
 	}
 
 }
 
 func TestMultisigTx(t *testing.T) {
-	killBitcoind, err := BitcoindRegtest()
+	cli, killBitcoind, err := RunBitcoind(&RunOptions{NewTmpDir: true})
 	testtool.FailOnFlag(t, err != nil, "Failed to start btcd", err)
 	defer killBitcoind()
 
@@ -112,7 +112,7 @@ func TestMultisigTx(t *testing.T) {
 	var zeroAddr, firstAddr, secondAddr, thirdAddr, fourthAddr Addr
 	// 0 把钱转给1+2+3多签(2-3)，1+3再转给4
 	{
-		addrs, err = CliToolGetSomeAddrs(5)
+		addrs, err = cli.ToolGetSomeAddrs(5)
 		testtool.FailOnFlag(t, err != nil, "Failed to get new address", err)
 		zeroAddr, firstAddr, secondAddr, thirdAddr, fourthAddr = addrs[0], addrs[1], addrs[2], addrs[3], addrs[4]
 		fmt.Println("addrs")
@@ -121,7 +121,7 @@ func TestMultisigTx(t *testing.T) {
 		}
 	}
 	{ //gen 101 to addr
-		_, err := CliGeneratetoaddress(101, zeroAddr.Address, nil)
+		_, err := cli.Generatetoaddress(101, zeroAddr.Address, nil)
 		testtool.FailOnFlag(t, err != nil, "Failed to generate to address ", err)
 	}
 
@@ -132,25 +132,25 @@ func TestMultisigTx(t *testing.T) {
 	)
 
 	{ // 创建多签地址
-		createMultisigAddresRes, err = CliCreatemultisig(2, []string{firstAddr.Pubkey, secondAddr.Pubkey, thirdAddr.Pubkey}, nil)
+		createMultisigAddresRes, err = cli.Createmultisig(2, []string{firstAddr.Pubkey, secondAddr.Pubkey, thirdAddr.Pubkey}, nil)
 		testtool.FailOnFlag(t, err != nil, "Failed to create multisig address", err)
-		fmt.Println("生成多签地址的结果", ToJsonIndent(createMultisigAddresRes))
+		fmt.Println("生成多签地址的结果", ToJSONIndent(createMultisigAddresRes))
 
 		//注意需要导入钱包，否则查不到unspent
-		err = CliImportaddress(btcjson.ImportAddressCmd{
+		err = cli.Importaddress(btcjson.ImportAddressCmd{
 			Address: createMultisigAddresRes.Address,
 		})
 		testtool.FailOnFlag(t, err != nil, "导入多签地址失败", err)
 
-		decodeScript, err := CliDecodescript(createMultisigAddresRes.RedeemScript)
+		decodeScript, err := cli.Decodescript(createMultisigAddresRes.RedeemScript)
 		testtool.FailOnFlag(t, err != nil, "Failed to decode script", err)
-		fmt.Println("decoded redeemScript:", ToJsonIndent(decodeScript))
+		fmt.Println("decoded redeemScript:", ToJSONIndent(decodeScript))
 	}
 
 	{ // 把0的钱交易给多签地址
-		unspents, err := CliListunspent(0, 999, []string{zeroAddr.Address}, nil, nil)
+		unspents, err := cli.Listunspent(0, 999, []string{zeroAddr.Address}, nil, nil)
 		testtool.FailOnFlag(t, err != nil, "Failed to list unspent", err)
-		// fmt.Println("unspents", ToJsonIndent(unspents))
+		// fmt.Println("unspents", ToJSONIndent(unspents))
 
 		unspent := unspents[0]
 		//0->1 3.777 btc
@@ -171,11 +171,11 @@ func TestMultisigTx(t *testing.T) {
 				},
 			},
 		}
-		rawHex, err := CliCreaterawtransaction(cmd)
+		rawHex, err := cli.Createrawtransaction(cmd)
 		testtool.FailOnFlag(t, err != nil, "Failed to create raw tx", err)
 
 		keys := []string{zeroAddr.Privkey}
-		signRes, err := CliSignrawtransactionwithkey(btcjson.SignRawTransactionCmd{
+		signRes, err := cli.Signrawtransactionwithkey(btcjson.SignRawTransactionCmd{
 			RawTx:    rawHex,
 			PrivKeys: &keys,
 			Prevtxs: []btcjson.PreviousDependentTxOutput{
@@ -188,41 +188,41 @@ func TestMultisigTx(t *testing.T) {
 			},
 		})
 		testtool.FailOnFlag(t, err != nil, "Failed to sign with key raw tx", err)
-		// fmt.Println("sign res", ToJsonIndent(signRes))
+		// fmt.Println("sign res", ToJSONIndent(signRes))
 
-		sendRes, err := CliSendrawtransaction(btcjson.SendRawTransactionCmd{
+		sendRes, err := cli.Sendrawtransaction(btcjson.SendRawTransactionCmd{
 			HexTx: signRes.Hex,
 		})
 		testtool.FailOnFlag(t, err != nil, "Failed to send raw tx", err)
 		// fmt.Println("send res:", sendRes)
 
-		// tx, err := CliGettransaction(sendRes, true)
-		spentTx, err = CliGetrawtransaction(btcjson.GetRawTransactionCmd{
+		// tx, err := cli.Gettransaction(sendRes, true)
+		spentTx, err = cli.Getrawtransaction(btcjson.GetRawTransactionCmd{
 			Txid: sendRes,
 		})
 		testtool.FailOnFlag(t, err != nil, "Failed to get tx", err)
-		// fmt.Println("to spent tx(mutisig)", ToJsonIndent(spentTx))
+		// fmt.Println("to spent tx(mutisig)", ToJSONIndent(spentTx))
 	}
 
 	{ //生成一个block来确认下刚才的交易
-		_, err = CliGeneratetoaddress(1, zeroAddr.Address, nil)
+		_, err = cli.Generatetoaddress(1, zeroAddr.Address, nil)
 		testtool.FailOnFlag(t, err != nil, "Failed to generate to address", err)
 	}
 
 	// {
-	// 	unspents, err := CliListunspent(0, 999, []string{zeroAddr.Address}, btcjson.Bool(true), nil)
+	// 	unspents, err := cli.Listunspent(0, 999, []string{zeroAddr.Address}, btcjson.Bool(true), nil)
 	// 	testtool.FailOnFlag(t, err != nil, "Failed to list unspent", err)
-	// 	fmt.Println("zeroAddr上的UTXO", ToJsonIndent(unspents))
+	// 	fmt.Println("zeroAddr上的UTXO", ToJSONIndent(unspents))
 	// }
 
 	{ //现在多签地址里的钱要转给fourthAddr
 		fmt.Println("收取多签地址转来的前的地址", fourthAddr.Address)
-		unspents, err := CliListunspent(0, 999, []string{createMultisigAddresRes.Address}, btcjson.Bool(true), nil)
+		unspents, err := cli.Listunspent(0, 999, []string{createMultisigAddresRes.Address}, btcjson.Bool(true), nil)
 		testtool.FailOnFlag(t, err != nil, "Failed to list unspent", err)
-		fmt.Println("多签地址上的UTXO", ToJsonIndent(unspents))
+		fmt.Println("多签地址上的UTXO", ToJSONIndent(unspents))
 
-		// amt, _ := CliGetreceivedbyaddress(createMultisigAddresRes.Address, 0)
-		amt, _ := CliGetreceivedbyaddress(zeroAddr.Address, 0)
+		// amt, _ := cli.Getreceivedbyaddress(createMultisigAddresRes.Address, 0)
+		amt, _ := cli.Getreceivedbyaddress(zeroAddr.Address, 0)
 		fmt.Println("Received amt:", amt)
 
 		spentVout := spentTx.Vout[0]
@@ -243,19 +243,19 @@ func TestMultisigTx(t *testing.T) {
 				},
 			},
 		}
-		rawHex, err := CliCreaterawtransaction(cmd)
+		rawHex, err := cli.Createrawtransaction(cmd)
 		testtool.FailOnFlag(t, err != nil, "Failed to create raw tx", err)
-		dTx, err := CliDecoderawtransaction(btcjson.DecodeRawTransactionCmd{
+		dTx, err := cli.Decoderawtransaction(btcjson.DecodeRawTransactionCmd{
 			HexTx: rawHex,
 		})
 		testtool.FailOnFlag(t, err != nil, "Failed to decode rawHex", err)
-		fmt.Println("创建的多签raw tx", ToJsonIndent(dTx))
+		fmt.Println("创建的多签raw tx", ToJSONIndent(dTx))
 
 		// for _, ke := range []string{firstAddr.Privkey} {
 		// for i, ke := range []string{firstAddr.Privkey, thirdAddr.Privkey} {
 		for i, ke := range []string{thirdAddr.Privkey, firstAddr.Privkey} {
 			keys := []string{ke}
-			signRes, err := CliSignrawtransactionwithkey(btcjson.SignRawTransactionCmd{
+			signRes, err := cli.Signrawtransactionwithkey(btcjson.SignRawTransactionCmd{
 				RawTx:    rawHex,
 				PrivKeys: &keys,
 				Prevtxs: []btcjson.PreviousDependentTxOutput{
@@ -270,41 +270,41 @@ func TestMultisigTx(t *testing.T) {
 			})
 			rawHex = signRes.Hex
 			testtool.FailOnFlag(t, err != nil, "Failed to sign with key raw tx", err)
-			fmt.Println("第n次签名的结果", i, ToJsonIndent(signRes))
-			deTx, err := CliDecoderawtransaction(btcjson.DecodeRawTransactionCmd{
+			fmt.Println("第n次签名的结果", i, ToJSONIndent(signRes))
+			deTx, err := cli.Decoderawtransaction(btcjson.DecodeRawTransactionCmd{
 				HexTx: rawHex,
 			})
 			testtool.FailOnFlag(t, err != nil, "Failed to decode raw tx in multisig", err)
-			fmt.Println("第n次签名后对rawTx的解码", i, ToJsonIndent(deTx))
+			fmt.Println("第n次签名后对rawTx的解码", i, ToJSONIndent(deTx))
 		}
 
-		multisigTxid, err := CliSendrawtransaction(btcjson.SendRawTransactionCmd{
+		multisigTxid, err := cli.Sendrawtransaction(btcjson.SendRawTransactionCmd{
 			HexTx: rawHex,
 		})
 		testtool.FailOnFlag(t, err != nil, "Failed to send raw tx", err)
 		fmt.Println("send(multisig) res:", multisigTxid)
-		mtx, err := CliGetrawtransaction(btcjson.GetRawTransactionCmd{
+		mtx, err := cli.Getrawtransaction(btcjson.GetRawTransactionCmd{
 			Txid:    multisigTxid,
 			Verbose: btcjson.Int(1),
 		})
 		testtool.FailOnFlag(t, err != nil, "Failed to get raw multisig tx", err)
-		fmt.Println("raw multisig tx", ToJsonIndent(mtx))
+		fmt.Println("raw multisig tx", ToJSONIndent(mtx))
 	}
 
 	{
-		_, err := CliGeneratetoaddress(1, zeroAddr.Address, nil)
+		_, err := cli.Generatetoaddress(1, zeroAddr.Address, nil)
 		testtool.FailOnFlag(t, err != nil, "Failed to send to addr 0", err)
 	}
 
 	{ //列出multisig的unspent
-		unspents, err := CliListunspent(0, 999, []string{createMultisigAddresRes.Address}, nil, nil)
+		unspents, err := cli.Listunspent(0, 999, []string{createMultisigAddresRes.Address}, nil, nil)
 		testtool.FailOnFlag(t, err != nil, "Failed to list unspent", err)
-		fmt.Println("unspent of multisig", ToJsonIndent(unspents))
+		fmt.Println("unspent of multisig", ToJSONIndent(unspents))
 	}
 	{ //最后列出转出的unspent
-		unspents, err := CliListunspent(0, 999, []string{fourthAddr.Address}, nil, nil)
+		unspents, err := cli.Listunspent(0, 999, []string{fourthAddr.Address}, nil, nil)
 		testtool.FailOnFlag(t, err != nil, "Failed to list unspent", err)
-		fmt.Println("unspent of 4", ToJsonIndent(unspents))
+		fmt.Println("unspent of 4", ToJSONIndent(unspents))
 	}
 
 	// PrintCmdOut = false

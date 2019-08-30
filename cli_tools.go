@@ -16,18 +16,18 @@ func (ad *Addr) String() string {
 }
 
 // CliToolGetSomeAddrs 一次获取n个地址（包含pub-priv key)
-func CliToolGetSomeAddrs(n int) ([]Addr, error) {
+func (cli *Cli) ToolGetSomeAddrs(n int) ([]Addr, error) {
 	var addrs []Addr
 	for i := 0; i < n; i++ {
-		add, err := CliGetnewaddress(nil, nil)
+		add, err := cli.Getnewaddress(nil, nil)
 		if err != nil {
 			return nil, err
 		}
-		info, err := CliGetAddressInfo(add)
+		info, err := cli.GetAddressInfo(add)
 		if err != nil {
 			return nil, err
 		}
-		dump, err := CliDumpprivkey(add)
+		dump, err := cli.Dumpprivkey(add)
 		if err != nil {
 			return nil, err
 		}

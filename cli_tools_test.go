@@ -7,11 +7,11 @@ import (
 )
 
 func TestCliToolGetSomeAddrs(t *testing.T) {
-	killBitcoind, err := BitcoindRegtest()
+	cli, killBitcoind, err := RunBitcoind(&RunOptions{NewTmpDir: true})
 	testtool.FailOnErr(t, err)
 	defer killBitcoind()
 
-	addrs, err := CliToolGetSomeAddrs(4)
+	addrs, err := cli.ToolGetSomeAddrs(4)
 	testtool.FailOnErr(t, err)
-	fmt.Println(ToJsonIndent(addrs))
+	fmt.Println(ToJSONIndent(addrs))
 }

@@ -3,6 +3,8 @@ package btccli
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/lomocoin/btccli/btcjson"
 )
 
 func panicIf(e error, msg string) {
@@ -16,14 +18,14 @@ func jsonStr(i interface{}) string {
 	return string(b)
 }
 
-// ToJsonIndent .
-func ToJsonIndent(i interface{}) string {
+// ToJSONIndent .
+func ToJSONIndent(i interface{}) string {
 	b, _ := json.MarshalIndent(i, "", " ")
 	return string(b)
 }
 
-// ToJson .
-func ToJson(i interface{}) string {
+// ToJSON .
+func ToJSON(i interface{}) string {
 	b, _ := json.Marshal(i)
 	return string(b)
 }
@@ -38,4 +40,15 @@ func IfOrString(flag bool, trueS, falseS string) string {
 
 func dividePrint(msg string) {
 	fmt.Printf("\n--------------%s--------------\n", msg)
+}
+
+func isCoinbaseTx(tx *btcjson.GetTransactionResult) bool {
+	flag := false
+	for _, dtl := range tx.Details {
+		if dtl.Category == "immature" || dtl.Category == "generate" {
+			flag = true
+			break
+		}
+	}
+	return len(tx.Details) == 0 && flag
 }
