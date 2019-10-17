@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lomocoin/btccli/btcjson"
+	"github.com/dabankio/btccli/btcjson"
 )
 
 // TestAssignField tests the assignField function handles supported combinations

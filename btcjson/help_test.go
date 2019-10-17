@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lomocoin/btccli/btcjson"
+	"github.com/dabankio/btccli/btcjson"
 )
 
 // TestHelpReflectInternals ensures the various help functions which deal with

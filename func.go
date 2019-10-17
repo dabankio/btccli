@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/lomocoin/btccli/btcjson"
+	"github.com/dabankio/btccli/btcjson"
 )
 
 func panicIf(e error, msg string) {

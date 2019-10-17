@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lomocoin/btccli/btcjson"
+	"github.com/dabankio/btccli/btcjson"
 )
 
 // TestIsValidIDType ensures the IsValidIDType function behaves as expected.

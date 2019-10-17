@@ -2,7 +2,7 @@ package btccli
 
 import (
 	"fmt"
-	"github.com/lomocoin/btccli/testtool"
+	"github.com/dabankio/btccli/testtool"
 	"testing"
 )
 

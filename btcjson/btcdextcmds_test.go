@@ -12,7 +12,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lomocoin/btccli/btcjson"
+	"github.com/dabankio/btccli/btcjson"
 )
 
 // TestBtcdExtCmds tests all of the btcd extended commands marshal and unmarshal

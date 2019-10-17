@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/lomocoin/btccli/testtool"
+	"github.com/dabankio/btccli/testtool"
 
-	"github.com/lomocoin/btccli/btcjson"
+	"github.com/dabankio/btccli/btcjson"
 )
 
 func TestCliCreatemultisig(t *testing.T) {

@@ -1,3 +1,3 @@
-module github.com/lomocoin/btccli
+module github.com/dabankio/btccli
 
 go 1.12

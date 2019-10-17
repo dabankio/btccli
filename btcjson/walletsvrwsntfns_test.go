@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lomocoin/btccli/btcjson"
+	"github.com/dabankio/btccli/btcjson"
 )
 
 // TestWalletSvrWsNtfns tests all of the chain server websocket-specific

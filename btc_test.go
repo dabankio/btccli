@@ -2,10 +2,10 @@ package btccli
 
 import (
 	"fmt"
-	"github.com/lomocoin/btccli/testtool"
+	"github.com/dabankio/btccli/testtool"
 	"testing"
 
-	"github.com/lomocoin/btccli/btcjson"
+	"github.com/dabankio/btccli/btcjson"
 )
 
 /// TextTx createRawTx, signTx, sendTx
@@ -104,7 +104,10 @@ func TestSimpleTx(t *testing.T) {
 }
 
 func TestMultisigTx(t *testing.T) {
-	cli, killBitcoind, err := RunBitcoind(&RunOptions{NewTmpDir: true})
+	cli, killBitcoind, err := RunBitcoind(&RunOptions{
+		NewTmpDir: true,
+		Args: []string{"-addresstype=legacy"},
+	})
 	testtool.FailOnFlag(t, err != nil, "Failed to start btcd", err)
 	defer killBitcoind()
 

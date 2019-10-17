@@ -7,7 +7,7 @@ package btcjson_test
 import (
 	"testing"
 
-	"github.com/lomocoin/btccli/btcjson"
+	"github.com/dabankio/btccli/btcjson"
 )
 
 // TestErrorCodeStringer tests the stringized output for the ErrorCode type.

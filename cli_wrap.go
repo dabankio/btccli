@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lomocoin/btccli/btcjson"
+	"github.com/dabankio/btccli/btcjson"
 )
 
-// CliAddmultisigaddress https://bitcoin.org/en/developer-reference#addmultisigaddress
+// Addmultisigaddress https://bitcoin.org/en/developer-reference#addmultisigaddress
 func (cli *Cli) Addmultisigaddress(cmd btcjson.AddMultisigAddressCmd) (btcjson.CreateMultiSigResult, error) {
 	args := cli.AppendArgs("addmultisigaddress", strconv.Itoa(int(cmd.NRequired)), ToJSON(cmd.Keys))
 	if cmd.Label != nil {
@@ -28,7 +28,7 @@ func (cli *Cli) Addmultisigaddress(cmd btcjson.AddMultisigAddressCmd) (btcjson.C
 	return resp, err
 }
 
-// CliCreatemultisig https://bitcoin.org/en/developer-reference#createmultisig
+// Createmultisig https://bitcoin.org/en/developer-reference#createmultisig
 func (cli *Cli) Createmultisig(nRequired uint8, keys []string, addressType *string) (btcjson.CreateMultiSigResult, error) {
 	args := cli.AppendArgs("createmultisig", strconv.Itoa(int(nRequired)), ToJSON(keys))
 	if addressType != nil {
@@ -41,7 +41,7 @@ func (cli *Cli) Createmultisig(nRequired uint8, keys []string, addressType *stri
 	return resp, err
 }
 
-// CliCreaterawtransaction https://bitcoin.org/en/developer-reference#createrawtransaction
+// Createrawtransaction https://bitcoin.org/en/developer-reference#createrawtransaction
 func (cli *Cli) Createrawtransaction(cmd btcjson.CreateRawTransactionCmd) (string, error) {
 	args := cli.AppendArgs(
 		"createrawtransaction",
@@ -58,7 +58,7 @@ func (cli *Cli) Createrawtransaction(cmd btcjson.CreateRawTransactionCmd) (strin
 	return cmdPrint, nil
 }
 
-// CliDecoderawtransaction https://bitcoin.org/en/developer-reference#decoderawtransaction
+// Decoderawtransaction https://bitcoin.org/en/developer-reference#decoderawtransaction
 func (cli *Cli) Decoderawtransaction(cmd btcjson.DecodeRawTransactionCmd) (*btcjson.DecodeRawTransactionResult, error) {
 	args := cli.AppendArgs("decoderawtransaction", cmd.HexTx)
 	if cmd.Iswitness != nil {
@@ -70,7 +70,7 @@ func (cli *Cli) Decoderawtransaction(cmd btcjson.DecodeRawTransactionCmd) (*btcj
 	return &res, err
 }
 
-// CliDecodescript https://bitcoin.org/en/developer-reference#decodescript
+// Decodescript https://bitcoin.org/en/developer-reference#decodescript
 func (cli *Cli) Decodescript(hex string) (btcjson.DecodeScriptResult, error) {
 	args := cli.AppendArgs("decodescript", hex)
 	cmdPrint := cmdAndPrint(exec.Command(
@@ -81,7 +81,7 @@ func (cli *Cli) Decodescript(hex string) (btcjson.DecodeScriptResult, error) {
 	return res, err
 }
 
-// CliDumpprivkey https://bitcoin.org/en/developer-reference#dumpprivkey
+// Dumpprivkey https://bitcoin.org/en/developer-reference#dumpprivkey
 func (cli *Cli) Dumpprivkey(addr string) (string, error) {
 	cmdPrint := cmdAndPrint(exec.Command(
 		CmdBitcoinCli, cli.AppendArgs("dumpprivkey", addr)...,
@@ -90,7 +90,7 @@ func (cli *Cli) Dumpprivkey(addr string) (string, error) {
 	return cmdPrint, nil
 }
 
-// CliGeneratetoaddress https://bitcoin.org/en/developer-reference#generatetoaddress
+// Generatetoaddress https://bitcoin.org/en/developer-reference#generatetoaddress
 func (cli *Cli) Generatetoaddress(nBlocks uint, address string, maxtriesPtr *uint) ([]string, error) {
 	maxtries := 1000000
 	if maxtriesPtr != nil {
@@ -105,7 +105,7 @@ func (cli *Cli) Generatetoaddress(nBlocks uint, address string, maxtriesPtr *uin
 	return hashs, err
 }
 
-// CliGetbestblockhash .
+// Getbestblockhash .
 func (cli *Cli) Getbestblockhash() (string, error) {
 	cmdPrint := cmdAndPrint(exec.Command(
 		CmdBitcoinCli, cli.AppendArgs("getbestblockhash")...,
@@ -114,7 +114,7 @@ func (cli *Cli) Getbestblockhash() (string, error) {
 	return cmdPrint, nil
 }
 
-// CliGetAddressInfo .
+// GetAddressInfo .
 func (cli *Cli) GetAddressInfo(addr string) (*btcjson.GetAddressInfoResp, error) {
 	cmdPrint := cmdAndPrint(exec.Command(
 		CmdBitcoinCli, cli.AppendArgs("getaddressinfo", addr)...,
@@ -124,7 +124,7 @@ func (cli *Cli) GetAddressInfo(addr string) (*btcjson.GetAddressInfoResp, error)
 	return &resp, err
 }
 
-// CliGetbalance .
+// Getbalance .
 func (cli *Cli) Getbalance(_dummy *string, minconf *int, includeWatchonly *bool) (float64, error) {
 	args := cli.AppendArgs("getbalance")
 	if _dummy == nil {
@@ -156,7 +156,7 @@ func (cli *Cli) Getbalance(_dummy *string, minconf *int, includeWatchonly *bool)
 	return strconv.ParseFloat(cmdPrint, 64)
 }
 
-// CliGetWalletInfo .
+// GetWalletInfo .
 func (cli *Cli) GetWalletInfo() map[string]interface{} {
 	cmdPrint := cmdAndPrint(exec.Command(
 		CmdBitcoinCli, cli.AppendArgs("getwalletinfo")...,
@@ -166,7 +166,7 @@ func (cli *Cli) GetWalletInfo() map[string]interface{} {
 	return info
 }
 
-// CliGetblockcount .
+// Getblockcount .
 func (cli *Cli) Getblockcount() (int, error) {
 	cmd := exec.Command(CmdBitcoinCli, cli.AppendArgs("getblockcount")...)
 	cmdPrint := cmdAndPrint(cmd)
@@ -174,7 +174,7 @@ func (cli *Cli) Getblockcount() (int, error) {
 	return strconv.Atoi(cmdPrint)
 }
 
-// CliGetblockhash .
+// Getblockhash .
 func (cli *Cli) Getblockhash(height int) (string, error) {
 	cmdPrint := cmdAndPrint(exec.Command(
 		CmdBitcoinCli,
@@ -184,7 +184,7 @@ func (cli *Cli) Getblockhash(height int) (string, error) {
 	return strings.TrimSpace(cmdPrint), nil
 }
 
-// CliGetblock https://bitcoin.org/en/developer-reference#getblock
+// Getblock https://bitcoin.org/en/developer-reference#getblock
 func (cli *Cli) Getblock(hash string, verbosity int) (*string, *btcjson.GetBlockResultV1, *btcjson.GetBlockResultV2, error) {
 	cmdPrint := cmdAndPrint(exec.Command(
 		CmdBitcoinCli, cli.AppendArgs(
@@ -212,7 +212,7 @@ func (cli *Cli) Getblock(hash string, verbosity int) (*string, *btcjson.GetBlock
 	return &hex, &b, &b2, err
 }
 
-// CliGetnewaddress https://bitcoin.org/en/developer-reference#getnewaddress
+// Getnewaddress https://bitcoin.org/en/developer-reference#getnewaddress
 func (cli *Cli) Getnewaddress(labelPtr, addressTypePtr *string) (hexedAddress string, err error) {
 	label := ""
 	if labelPtr != nil {
@@ -227,7 +227,7 @@ func (cli *Cli) Getnewaddress(labelPtr, addressTypePtr *string) (hexedAddress st
 	return cmdPrint, nil
 }
 
-// CliGettransaction https://bitcoin.org/en/developer-reference#gettransaction
+// Gettransaction https://bitcoin.org/en/developer-reference#gettransaction
 func (cli *Cli) Gettransaction(txid string, includeWatchonly bool) (*btcjson.GetTransactionResult, error) {
 	cmdPrint := cmdAndPrint(exec.Command(
 		CmdBitcoinCli, cli.AppendArgs("gettransaction", txid, strconv.FormatBool(includeWatchonly))...,
@@ -237,7 +237,7 @@ func (cli *Cli) Gettransaction(txid string, includeWatchonly bool) (*btcjson.Get
 	return &tx, err
 }
 
-// CliGetrawtransaction .
+// Getrawtransaction .
 func (cli *Cli) Getrawtransaction(cmd btcjson.GetRawTransactionCmd) (*btcjson.RawTx, error) {
 	args := cli.AppendArgs(
 		"getrawtransaction",
@@ -252,7 +252,7 @@ func (cli *Cli) Getrawtransaction(cmd btcjson.GetRawTransactionCmd) (*btcjson.Ra
 	return &tx, err
 }
 
-// CliGetreceivedbyaddress https://bitcoin.org/en/developer-reference#getreceivedbyaddress
+// Getreceivedbyaddress https://bitcoin.org/en/developer-reference#getreceivedbyaddress
 func (cli *Cli) Getreceivedbyaddress(addr string, minconf int) (string, error) {
 	args := cli.AppendArgs(
 		"getreceivedbyaddress",
@@ -265,7 +265,7 @@ func (cli *Cli) Getreceivedbyaddress(addr string, minconf int) (string, error) {
 	return cmdPrint, nil
 }
 
-// CliImportprivkey https://bitcoin.org/en/developer-reference#importprivkey
+// Importprivkey https://bitcoin.org/en/developer-reference#importprivkey
 func (cli *Cli) Importprivkey(cmd btcjson.ImportPrivKeyCmd) error {
 	args := cli.AppendArgs("importprivkey", cmd.PrivKey)
 	if cmd.Label != nil {
@@ -286,7 +286,7 @@ func (cli *Cli) Importprivkey(cmd btcjson.ImportPrivKeyCmd) error {
 	return nil
 }
 
-// CliImportpubkey https://bitcoin.org/en/developer-reference#importpubkey
+// Importpubkey https://bitcoin.org/en/developer-reference#importpubkey
 func (cli *Cli) Importpubkey(cmd btcjson.ImportPubKeyCmd) error {
 	args := cli.AppendArgs("importpubkey", cmd.PubKey)
 	if cmd.Label != nil {
@@ -308,7 +308,7 @@ func (cli *Cli) Importpubkey(cmd btcjson.ImportPubKeyCmd) error {
 
 }
 
-// CliImportaddress .
+// Importaddress .
 func (cli *Cli) Importaddress(cmd btcjson.ImportAddressCmd) error {
 	args := cli.AppendArgs(
 		"importaddress",
@@ -326,7 +326,7 @@ func (cli *Cli) Importaddress(cmd btcjson.ImportAddressCmd) error {
 	return nil
 }
 
-// CliListunspent https://bitcoin.org/en/developer-reference#listunspent
+// Listunspent https://bitcoin.org/en/developer-reference#listunspent
 func (cli *Cli) Listunspent(minconf, maxconf int, addresses []string, includeUnsafe *bool, query *btcjson.ListUnspentQueryOptions) ([]btcjson.ListUnspentResult, error) {
 	if includeUnsafe == nil {
 		includeUnsafe = btcjson.Bool(false)
@@ -349,7 +349,7 @@ func (cli *Cli) Listunspent(minconf, maxconf int, addresses []string, includeUns
 	return unspents, err
 }
 
-// CliSendtoaddress https://bitcoin.org/en/developer-reference#sendtoaddress
+// Sendtoaddress https://bitcoin.org/en/developer-reference#sendtoaddress
 func (cli *Cli) Sendtoaddress(cmd *btcjson.SendToAddressCmd) (string, error) {
 	args := cli.AppendArgs(
 		"sendtoaddress",
@@ -375,7 +375,7 @@ func (cli *Cli) Sendtoaddress(cmd *btcjson.SendToAddressCmd) (string, error) {
 	return cmdPrint, nil
 }
 
-// CliSendrawtransaction https://bitcoin.org/en/developer-reference#sendrawtransaction
+// Sendrawtransaction https://bitcoin.org/en/developer-reference#sendrawtransaction
 func (cli *Cli) Sendrawtransaction(cmd btcjson.SendRawTransactionCmd) (string, error) {
 	args := cli.AppendArgs(
 		"sendrawtransaction",
@@ -388,10 +388,13 @@ func (cli *Cli) Sendrawtransaction(cmd btcjson.SendRawTransactionCmd) (string, e
 		CmdBitcoinCli, args...,
 	))
 	//TODO validate hex
+	if strings.Contains(cmdPrint, "error") {
+		return "", fmt.Errorf("send rawtransaction return error: %s", cmdPrint)
+	}
 	return cmdPrint, nil
 }
 
-// CliSignrawtransactionwithkey https://bitcoin.org/en/developer-reference#signrawtransactionwithkey
+// Signrawtransactionwithkey https://bitcoin.org/en/developer-reference#signrawtransactionwithkey
 func (cli *Cli) Signrawtransactionwithkey(cmd btcjson.SignRawTransactionCmd) (btcjson.SignRawTransactionResult, error) {
 	args := cli.AppendArgs(
 		"signrawtransactionwithkey",
@@ -407,6 +410,9 @@ func (cli *Cli) Signrawtransactionwithkey(cmd btcjson.SignRawTransactionCmd) (bt
 	))
 	var res btcjson.SignRawTransactionResult
 	err := json.Unmarshal([]byte(cmdPrint), &res)
+	if err != nil {
+		return res, fmt.Errorf("failed to decode resp, %v, \n%s", err, cmdPrint)
+	}
 	return res, err
 }
 
@@ -422,7 +428,7 @@ type ValidateAddressResp struct {
 	WitnessProgram string `json:"witness_program"` // "hex"     (string, optional) The hex value of the witness program
 }
 
-// CliValidateaddress .
+// Validateaddress .
 func (cli *Cli) Validateaddress(addr string) (ValidateAddressResp, error) {
 	validateCmd := exec.Command(CmdBitcoinCli, cli.AppendArgs("validateaddress", addr)...)
 	cmdPrint := cmdAndPrint(validateCmd) //auto print result

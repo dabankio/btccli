@@ -9,7 +9,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/lomocoin/btccli/btcjson"
+	"github.com/dabankio/btccli/btcjson"
 )
 
 // TestUsageFlagStringer tests the stringized output for the UsageFlag type.

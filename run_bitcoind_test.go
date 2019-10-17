@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/lomocoin/btccli/testtool"
+	"github.com/dabankio/btccli/testtool"
 )
 
 func TestBitcoindWithOptions(t *testing.T) {
